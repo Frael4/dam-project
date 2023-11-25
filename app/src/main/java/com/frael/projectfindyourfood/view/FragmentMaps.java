@@ -20,6 +20,19 @@ public class FragmentMaps extends SupportMapFragment implements OnMapReadyCallba
     double lat, lon;
 
     public FragmentMaps(){}
+
+    /**
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param viewGroup If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param bundle If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle){
         View rootView = super.onCreateView(inflater,viewGroup,bundle);
@@ -34,6 +47,11 @@ public class FragmentMaps extends SupportMapFragment implements OnMapReadyCallba
         return rootView;
     }
 
+    /**
+     * Inicializa el mapa con sus
+     * respectivas configuraciones
+     * @param googleMap
+     */
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
 

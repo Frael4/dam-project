@@ -7,28 +7,22 @@
     android:layout_height="match_parent"
     tools:context=".view.SearchInMap">
 
-    <!--<fragment
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:id="@+id/mapa"
-        map:cameraZoom="10"
-        map:uiRotateGestures="true"
-        map:uiZoomcontrols="true"
-
-        ></fragment>-->
-    <!--<fragment
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/fragment"/>-->
-
-    <fragment
-        android:id="@+id/fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <!--
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment1"
         android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_margin="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent" /> -->
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="391dp"
+        android:layout_height="581dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

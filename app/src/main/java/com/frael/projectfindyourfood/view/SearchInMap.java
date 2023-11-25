@@ -1,5 +1,6 @@
 package com.frael.projectfindyourfood.view;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -9,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.provider.Settings;
 import android.Manifest;
 import android.util.Log;
@@ -25,18 +27,20 @@ public class SearchInMap extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_in_map);
-
+        //Si no hay permisos mandamos peticion para que nos den
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION}, 1000);
         }
-        else {
+        else { // Caso contrario inicializamos proceso de localizacion
             inicializarLocalizacion();
         }
-        //SupportMapFragment mapFragment = getSupportFragmentManager().findFragmentById(R.id.mapa);
+
     }
 
     /**
-     *
+     * Inicializa la geolocalizacion
+     * Verifica si la aplicacion cuenta con los permisos
+     * necesarios
      */
     @SuppressLint("ServiceCast")
     private void inicializarLocalizacion() {
@@ -90,8 +94,19 @@ public class SearchInMap extends AppCompatActivity {
         if(requestCode == 1000){
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 inicializarLocalizacion();
-                return;
+
             }
         }
+    }
+
+    /*@Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+    }*/
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Detener las actualizaciones de ubicación si es necesario
     }
 }

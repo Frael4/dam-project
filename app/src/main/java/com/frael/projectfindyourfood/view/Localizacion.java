@@ -18,7 +18,12 @@ public class Localizacion implements LocationListener {
 
     SearchInMap principal;
     TextView mensaje;
-    
+
+    /**
+     * Cuando la localizacion se
+     * actualice, actualizamos el mapa
+     * @param location the updated location
+     */
     @Override
     public void onLocationChanged(@NonNull Location location) {
         String text = "Mi ubicacion es :" +
@@ -37,19 +42,25 @@ public class Localizacion implements LocationListener {
      * @param longitude
      */
     private void mapa(double latitude, double longitude) {
-        FragmentMaps fragmentMaps = new FragmentMaps();
+        try {
+            FragmentMaps fragmentMaps = new FragmentMaps();
 
-        Bundle bundle = new Bundle();
-        bundle.putDouble("lat", new Double(latitude));
-        bundle.putDouble("lon", new Double(longitude));
-        fragmentMaps.setArguments(bundle);
+            Bundle bundle = new Bundle();
+            bundle.putDouble("lat", new Double(latitude));
+            bundle.putDouble("lon", new Double(longitude));
+            fragmentMaps.setArguments(bundle);
 
-        FragmentManager fragmentManager = getPrincipal().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragment, fragmentMaps, null);
+            FragmentManager fragmentManager = getPrincipal().getSupportFragmentManager();
+            if(!fragmentManager.isStateSaved()){
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.mapView, fragmentMaps, null);
 
-
-        fragmentTransaction.commit();
+                fragmentTransaction.commit();
+            }
+        }catch (Exception ex)
+        {
+            Log.e("Error en mapa", ex.getMessage());
+        }
     }
 
     /**
@@ -75,12 +86,14 @@ public class Localizacion implements LocationListener {
 
     @Override
     public void onProviderEnabled(String provider){
-        mensaje.setText("GPS Activado");
+        Log.d("GPS STATE", "GPS ACTIVDo");
+        //mensaje.setText("GPS Activado");
     }
 
     @Override
     public void onProviderDisabled(String provider){
-        mensaje.setText("GPS Desactivado");
+        Log.d("GPS STATE", "GPS Desactivado");
+        //mensaje.setText("GPS Desactivado");
     }
 
     public void setPrincipal(SearchInMap principal) {
@@ -90,4 +103,5 @@ public class Localizacion implements LocationListener {
     public SearchInMap getPrincipal() {
         return principal;
     }
+
 }
