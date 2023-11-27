@@ -16,7 +16,6 @@ import android.Manifest;
 import android.util.Log;
 //import com.frael.projectfindyourfood.Manifest;
 import com.frael.projectfindyourfood.R;
-
 public class SearchInMap extends AppCompatActivity {
 
     /**
@@ -80,7 +79,7 @@ public class SearchInMap extends AppCompatActivity {
     }
 
     /**
-     *
+     *  Inicializa la peticion para obtener permisos
      * @param requestCode The request code passed in
      * @param permissions The requested permissions. Never null.
      * @param grantResults The grant results for the corresponding permissions
@@ -98,11 +97,6 @@ public class SearchInMap extends AppCompatActivity {
             }
         }
     }
-
-    /*@Override
-    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-    }*/
 
     @Override
     protected void onDestroy() {

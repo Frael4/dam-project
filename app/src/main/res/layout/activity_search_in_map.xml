@@ -7,18 +7,29 @@
     android:layout_height="match_parent"
     tools:context=".view.SearchInMap">
 
-    <!--
-    <androidx.fragment.app.FragmentContainerView
+    <!--<androidx.fragment.app.FragmentContainerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/fragment1"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="393dp"
+        android:layout_height="573dp"
         android:layout_margin="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" /> -->
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.186" />
+-->
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="147dp"
+        android:layout_height="51dp"
+        android:layout_marginBottom="24dp"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
     <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView"
+        android:id="@+id/fragment1"
         android:layout_width="391dp"
         android:layout_height="581dp"
         app:layout_constraintBottom_toBottomOf="parent"

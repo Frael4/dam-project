@@ -13,11 +13,14 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.frael.projectfindyourfood.MainActivity;
 import com.frael.projectfindyourfood.R;
+import com.google.android.gms.maps.SupportMapFragment;
 
 public class Localizacion implements LocationListener {
 
     SearchInMap principal;
     TextView mensaje;
+    double lat , lon = 0;
+
 
     /**
      * Cuando la localizacion se
@@ -26,12 +29,8 @@ public class Localizacion implements LocationListener {
      */
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        String text = "Mi ubicacion es :" +
-                "Latitud = " + location.getLatitude() +
-                " Longitud = "+ location.getLongitude();
-        
-        //mensaje.setText(text);
-        
+
+
         mapa(location.getLatitude(), location.getLongitude());
     }
 
@@ -44,19 +43,21 @@ public class Localizacion implements LocationListener {
     private void mapa(double latitude, double longitude) {
         try {
             FragmentMaps fragmentMaps = new FragmentMaps();
-
+            //Seteamos los parametros de lat y lon para enviarlos al fragmento
             Bundle bundle = new Bundle();
             bundle.putDouble("lat", new Double(latitude));
             bundle.putDouble("lon", new Double(longitude));
             fragmentMaps.setArguments(bundle);
 
+            //Obtenemos la actividad principal el gestor de Fragmentos
             FragmentManager fragmentManager = getPrincipal().getSupportFragmentManager();
-            if(!fragmentManager.isStateSaved()){
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.mapView, fragmentMaps, null);
 
-                fragmentTransaction.commit();
-            }
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            //Realizamos un remplazo del fragmento
+            fragmentTransaction.add(R.id.fragment1, fragmentMaps, null);
+            Log.d("Fragment", "Renderizando mapaa");
+            fragmentTransaction.commit();
+
         }catch (Exception ex)
         {
             Log.e("Error en mapa", ex.getMessage());
@@ -64,7 +65,8 @@ public class Localizacion implements LocationListener {
     }
 
     /**
-     *
+     * Mostrare la disponibilidad del servicio
+     * segun el estado
      * @param provider
      * @param status
      * @param extras
@@ -96,6 +98,11 @@ public class Localizacion implements LocationListener {
         //mensaje.setText("GPS Desactivado");
     }
 
+    /**
+     * Establece el SearchInMap como actividad principal
+     * para el mapa
+     * @param principal
+     */
     public void setPrincipal(SearchInMap principal) {
         this.principal = principal;
     }

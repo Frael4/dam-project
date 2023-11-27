@@ -1,5 +1,6 @@
 plugins {
     id("com.android.application")
+    id("com.google.secrets_gradle_plugin") version("0.6") // agregar al proyecto el secrets plugin
 }
 
 android {
@@ -28,6 +29,12 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+    }
+}
+
+buildscript {
+    dependencies {
+        classpath("com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:2.0.1")
     }
 }
 
