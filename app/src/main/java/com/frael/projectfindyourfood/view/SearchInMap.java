@@ -15,7 +15,10 @@ import android.provider.Settings;
 import android.Manifest;
 import android.util.Log;
 //import com.frael.projectfindyourfood.Manifest;
+import com.frael.projectfindyourfood.BuildConfig;
 import com.frael.projectfindyourfood.R;
+import com.google.android.libraries.places.api.Places;
+
 public class SearchInMap extends AppCompatActivity {
 
     /**
@@ -32,6 +35,10 @@ public class SearchInMap extends AppCompatActivity {
         }
         else { // Caso contrario inicializamos proceso de localizacion
             inicializarLocalizacion();
+        }
+
+        if(!Places.isInitialized()){
+            Places.initialize(this, BuildConfig.PLACES_API);
         }
 
     }

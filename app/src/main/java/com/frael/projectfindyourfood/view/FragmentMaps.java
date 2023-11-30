@@ -16,9 +16,12 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.net.PlacesClient;
 
 public class FragmentMaps extends SupportMapFragment implements OnMapReadyCallback {
     double lat, lon;
+
 
     public FragmentMaps(){}
     /**
@@ -45,6 +48,7 @@ public class FragmentMaps extends SupportMapFragment implements OnMapReadyCallba
         }
 
         getMapAsync(this);
+
 
         return rootView;
     }
@@ -73,10 +77,8 @@ public class FragmentMaps extends SupportMapFragment implements OnMapReadyCallba
         googleMap.addMarker(markerOptions);
 
 
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-        googleMap.animateCamera(CameraUpdateFactory.zoomBy(20));
-
-
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        googleMap.animateCamera(CameraUpdateFactory.zoomBy(12));
 
     }
 }
