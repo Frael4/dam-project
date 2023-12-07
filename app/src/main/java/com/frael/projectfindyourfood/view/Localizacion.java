@@ -18,7 +18,12 @@ import com.frael.projectfindyourfood.MainActivity;
 import com.frael.projectfindyourfood.R;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.internal.safeparcel.SafeParcelable;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -35,10 +40,9 @@ import java.util.List;
 public class Localizacion implements LocationListener {
 
 
-    SearchInMap principal;
-    TextView mensaje;
+    private static SearchInMap principal;
     double lat , lon = 0;
-
+    GoogleMap googleMap;
 
     /**
      * Cuando la localizacion se
@@ -59,6 +63,7 @@ public class Localizacion implements LocationListener {
      */
     @SuppressLint("MissingPermission")
     private void mapa(double latitude, double longitude) {
+
         try {
             FragmentMaps fragmentMaps = new FragmentMaps();
             //Seteamos los parametros de lat y lon para enviarlos al fragmento
@@ -74,51 +79,16 @@ public class Localizacion implements LocationListener {
             //Realizamos un remplazo del fragmento
             fragmentTransaction.add(R.id.fragment1, fragmentMaps, null);
             Log.d("Fragment", "Renderizando mapaa");
-            fragmentTransaction.commit();
+            fragmentTransaction.commitAllowingStateLoss();
 
         }catch (Exception ex)
         {
             Log.e("Error en mapa", ex.getMessage());
         }
 
-        // Uso de places api
-        PlacesClient placesClient = Places.createClient(getPrincipal());
-        if(placesClient == null){
-            Log.d("Places", placesClient.toString());
-            return;
-        }
-        FindCurrentPlaceRequest request = FindCurrentPlaceRequest.builder(getPlaceFields()).build();
-
-        Task<FindCurrentPlaceResponse> task =  placesClient.findCurrentPlace(request);
-        task.addOnCompleteListener( t -> {
-           if(t.isSuccessful()){
-               FindCurrentPlaceResponse result = t.getResult();
-
-               for (PlaceLikelihood place: result.getPlaceLikelihoods()) {
-                Log.i(TAG, String.format("Lugar '%s' tiene probabilidad: %f", place.getPlace().getName(), place.getLikelihood()));
-               }
-           } else {
-               Exception exception = task.getException();
-               if (exception instanceof ApiException) {
-                   ApiException apiException = (ApiException) exception;
-                   Log.e(TAG, "Lugar no encontrado: " + apiException.getStatusCode());
-               }
-
-           }
-        });
-
 
     }
 
-    // Método para obtener los campos de interés
-    private List<Place.Field> getPlaceFields() {
-        List<Place.Field> placeFields = Arrays.asList(
-                Place.Field.NAME,
-                Place.Field.ADDRESS,
-                Place.Field.LAT_LNG
-        );
-        return placeFields;
-    }
 
     /**
      * Mostrare la disponibilidad del servicio

@@ -29,8 +29,12 @@ public class SearchInMap extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_in_map);
+
         //Si no hay permisos mandamos peticion para que nos den
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION}, 1000);
         }
         else { // Caso contrario inicializamos proceso de localizacion
@@ -56,10 +60,11 @@ public class SearchInMap extends AppCompatActivity {
         if(locationManager == null ){
             Log.d("Location Manager", "ESNULLL");
         }
-        Localizacion local =  new Localizacion();
 
+        Localizacion local =  new Localizacion();
         local.setPrincipal(this);
-        boolean gpsEnabled = true;
+
+        boolean gpsEnabled = false;
 
         if (locationManager != null) {
             // Llama al método isProviderEnabled solo si locationManager no es nulo

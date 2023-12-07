@@ -1,5 +1,8 @@
 package com.frael.projectfindyourfood.view;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +11,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -16,11 +20,20 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.PlaceLikelihood;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class FragmentMaps extends SupportMapFragment implements OnMapReadyCallback {
     double lat, lon;
+    Localizacion local = new Localizacion();
 
 
     public FragmentMaps(){}
@@ -58,18 +71,18 @@ public class FragmentMaps extends SupportMapFragment implements OnMapReadyCallba
      * respectivas configuraciones
      * @param googleMap
      */
+    @SuppressLint("MissingPermission")
     @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
+    public void onMapReady(@NonNull final GoogleMap googleMap) {
 
         LatLng latLng = new LatLng(lat, lon);
 
         float zoom = 17;
 
-        //googleMap.getUiSettings().setZoomControlsEnabled(true);
         UiSettings settings = googleMap.getUiSettings();
         settings.setZoomControlsEnabled(true);
 
-        MarkerOptions markerOptions = new MarkerOptions();
+        final MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.title("You're here!");
         markerOptions.position(latLng);
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
@@ -78,7 +91,63 @@ public class FragmentMaps extends SupportMapFragment implements OnMapReadyCallba
 
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        googleMap.animateCamera(CameraUpdateFactory.zoomBy(12));
+        googleMap.animateCamera(CameraUpdateFactory.zoomBy(zoom));
 
+
+        // USO DE API PLACES
+        //
+        PlacesClient placesClient = Places.createClient(local.getPrincipal());
+
+        if(placesClient == null){
+            Log.d("Places", placesClient.toString());
+            return;
+        }
+        FindCurrentPlaceRequest request = FindCurrentPlaceRequest.builder(getPlaceFields()).build();
+
+        Task<FindCurrentPlaceResponse> task =  placesClient.findCurrentPlace(request);
+        task.addOnCompleteListener( t -> {
+            if(t.isSuccessful()){
+                FindCurrentPlaceResponse result = t.getResult();
+
+                for (PlaceLikelihood place: result.getPlaceLikelihoods()) {
+                    //place.getPlace().getPlaceTypes()
+                    Log.i("LUGARES ENCONTRADOS", String.format("Lugar '%s' tiene probabilidad: %f", place.getPlace().getName(), place.getLikelihood()));
+                    Log.i("LUGARES datos", String.format("Lugar price level '%f' ", place.getPlace().getPriceLevel()));
+                    LatLng latLng1 = new LatLng(place.getPlace().getLatLng().latitude, place.getPlace().getLatLng().longitude);
+                    markerOptions.title(place.getPlace().getName());
+                    markerOptions.position(latLng1);
+                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+
+                    googleMap.addMarker(markerOptions);
+
+
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                }
+            } else {
+                Exception exception = task.getException();
+                if (exception instanceof ApiException) {
+                    ApiException apiException = (ApiException) exception;
+                    Log.e(TAG, "Lugar no encontrado: " + apiException.getStatusCode());
+                }
+
+            }
+        });
+
+    }
+
+
+    /**
+     *
+     * @return
+     */
+    private List<Place.Field> getPlaceFields() {
+        List<Place.Field> placeFields = Arrays.asList(
+                Place.Field.NAME,
+                Place.Field.ADDRESS,
+                Place.Field.LAT_LNG,
+                Place.Field.PRICE_LEVEL,
+                Place.Field.TYPES
+        );
+        return placeFields;
     }
 }
